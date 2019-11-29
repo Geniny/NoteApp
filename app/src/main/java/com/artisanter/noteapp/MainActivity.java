@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Note> notes;
     ArrayList<Note> filteredNotes;
-    ListView notesView;
+    AbsListView notesView;
     EditText searchBar;
     NoteAdapter adapter;
     NoteDao dao;
@@ -143,4 +143,5 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setText("");
         search();
     }
+
 }

@@ -29,9 +29,9 @@ class NoteAdapter extends ArrayAdapter<Note> {
     }
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
-        @SuppressLint("ViewHolder")
-        View view = inflater.inflate(this.layout, parent, false);
+        View view = convertView == null?
+                inflater.inflate(this.layout, parent, false)
+                :convertView;
 
         TextView title = view.findViewById(R.id.title);
         TextView content = view.findViewById(R.id.content);
@@ -46,13 +46,16 @@ class NoteAdapter extends ArrayAdapter<Note> {
 
         if(note.content.isEmpty())
             content.setVisibility(View.GONE);
-        else
+        else{
+            content.setVisibility(View.VISIBLE);
             content.setText(note.content);
+        }
         if(note.tags.isEmpty())
             tags.setVisibility(View.GONE);
-        else
+        else {
             tags.setText(note.tags);
-
+            tags.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 }
