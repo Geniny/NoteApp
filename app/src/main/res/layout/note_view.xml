@@ -3,9 +3,6 @@
 <ListView android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:divider="@android:color/transparent"
     tools:listitem="@layout/list_item"
-    android:dividerHeight="10dp"
+    android:divider="@android:color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android" />

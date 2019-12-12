@@ -2,8 +2,11 @@ package com.artisanter.noteapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -67,7 +70,23 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        init();
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search();
+            }
+        });
+        //init();
         notes = new ArrayList<>(dao.getAll());
         filteredNotes = new ArrayList<>(notes);
         Collections.sort(notes, comparator);
@@ -112,11 +131,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @SuppressLint("ShowToast")
     public void sortClick(View view) {
-        if(comparator == dateComparator)
+        if(comparator == dateComparator){
             comparator = titleComparator;
-        else
+            InstantToast.showText(getApplicationContext(), "Сортировка по заголовку");
+        }
+        else {
             comparator = dateComparator;
+            InstantToast.showText(getApplicationContext(), "Сортировка по дате");
+        }
         setSorted();
     }
 
@@ -134,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     Comparator<Note> dateComparator = new Comparator<Note>() {
         @Override
         public int compare(Note n1, Note n2) {
-            return n2.title.compareTo(n1.title);
+            return n2.date.compareTo(n1.date);
         }
     };
     Comparator<Note> comparator = dateComparator;
@@ -143,5 +167,4 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setText("");
         search();
     }
-
 }

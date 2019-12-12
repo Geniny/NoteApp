@@ -29,10 +29,11 @@ class NoteAdapter extends ArrayAdapter<Note> {
     }
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        View view = convertView == null?
-                inflater.inflate(this.layout, parent, false)
-                :convertView;
+        //View view = convertView == null?
+        //        inflater.inflate(this.layout, parent, false)
+        //        :convertView;
 
+        View view =   inflater.inflate(this.layout, parent, false);
         TextView title = view.findViewById(R.id.title);
         TextView content = view.findViewById(R.id.content);
         TextView tags = view.findViewById(R.id.tags);
@@ -43,19 +44,16 @@ class NoteAdapter extends ArrayAdapter<Note> {
 
         title.setText(note.title);
         date.setText(dateFormat.format(note.date));
-
-        if(note.content.isEmpty())
-            content.setVisibility(View.GONE);
-        else{
-            content.setVisibility(View.VISIBLE);
-            content.setText(note.content);
-        }
-        if(note.tags.isEmpty())
+        content.setText(note.content);
+        if(note.tags.isEmpty()){
             tags.setVisibility(View.GONE);
-        else {
-            tags.setText(note.tags);
+            content.setMaxLines(content.getMaxLines() + 1);
+            content.setMinLines(content.getMinLines() + 1);
+        }
+        else{
             tags.setVisibility(View.VISIBLE);
         }
+        tags.setText(note.tags);
         return view;
     }
 }

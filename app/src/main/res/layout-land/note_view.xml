@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:numColumns="2"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     tools:listitem="@layout/list_item"
-    android:layout_span="@android:color/transparent"
-    android:horizontalSpacing="10dp"
-    android:verticalSpacing="10dp"
+    android:horizontalSpacing="-5dp"
     xmlns:android="http://schemas.android.com/apk/res/android" />
