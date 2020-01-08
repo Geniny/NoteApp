@@ -1,4 +1,4 @@
-package com.artisanter.noteapp;
+package com.geniny.noteapp;
 
 import android.app.Application;
 import android.content.Intent;
@@ -26,10 +26,6 @@ public class App extends Application {
 
     public static App getInstance() {
         return instance;
-    }
-
-    public NoteDB getDatabase() {
-        return database;
     }
 
     public NoteDao getDao(){

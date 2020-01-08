@@ -1,4 +1,4 @@
-package com.artisanter.noteapp;
+package com.geniny.noteapp;
 
 import org.junit.Test;
 

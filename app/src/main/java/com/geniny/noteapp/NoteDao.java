@@ -1,6 +1,4 @@
-package com.artisanter.noteapp;
-
-import android.widget.ListView;
+package com.geniny.noteapp;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

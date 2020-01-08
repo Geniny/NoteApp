@@ -1,18 +1,22 @@
-package com.artisanter.noteapp;
+package com.geniny.noteapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +29,13 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Note> notes;
-    ArrayList<Note> filteredNotes;
+    ArrayList<Note> notes, sortedNotes;
     AbsListView notesView;
     EditText searchBar;
-    NoteAdapter adapter;
+    Adapter adapter;
     NoteDao dao;
+    ImageButton sort;
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,23 +43,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         dao = App.getInstance().getDao();
         notesView = findViewById(R.id.notes);
-        notesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
-                intent.putExtra("uid", Objects.requireNonNull(adapter.getItem(position)).uid);
-                startActivity(intent);
-            }
-        });
-
+        sort = findViewById(R.id.sort);
+        sort.setBackgroundResource(R.drawable.ic_sort_by_alpha);
         notesView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                dao.delete(adapter.getItem(position));
-                adapter.remove(adapter.getItem(position));
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getApplicationContext(), "Заметка удалена", Toast.LENGTH_SHORT)
-                .show();
+                Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+                intent.putExtra("uid", Objects.requireNonNull(adapter.getItem(position)).uid);
+                intent.putExtra("flag",false);
+                startActivity(intent);
                 return true;
             }
         });
@@ -70,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        notesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                searchBar.clearFocus();
+                InputMethodManager imm = (InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(notesView.getWindowToken(), 0);
+            }
+        });
+
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,11 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 search();
             }
         });
-        //init();
         notes = new ArrayList<>(dao.getAll());
-        filteredNotes = new ArrayList<>(notes);
+        sortedNotes = new ArrayList<>(notes);
         Collections.sort(notes, comparator);
-        adapter = new NoteAdapter(this, R.layout.list_item, filteredNotes);
+        adapter = new Adapter(this, R.layout.list_item, sortedNotes);
         notesView.setAdapter(adapter);
     }
 
@@ -101,51 +107,46 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
     void search(){
-        filteredNotes.clear();
+        sortedNotes.clear();
         if(searchBar.getText().toString().isEmpty()){
-            filteredNotes.addAll(notes);
+            sortedNotes.addAll(notes);
             setSorted();
             return;
         }
-        List<String> tags = Arrays.asList(searchBar.getText().toString().split(", "));
+        List<String> tags = Arrays.asList(searchBar.getText().toString().split(" "));
         for(Note note:notes){
-            List<String> noteTags = Arrays.asList(note.tags.split(", "));
+            List<String> noteTags = Arrays.asList(note.tags.split("#"));
             if(noteTags.containsAll(tags))
-                filteredNotes.add(note);
+                sortedNotes.add(note);
         }
         setSorted();
     }
-    void init() {
-        dao.deleteAll();
-        for(int i = 0; i<= 3;i++){
-            Note note = new Note();
-            note.content = "ccc";
-            note.title = "#" + i;
-            note.tags = "tag" + (i+1) +", tag" + i;
-            dao.insert(note);
-        }
-    }
 
     public void addClick(View view) {
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
         startActivity(intent);
     }
 
-    @SuppressLint("ShowToast")
     public void sortClick(View view) {
         if(comparator == dateComparator){
             comparator = titleComparator;
-            InstantToast.showText(getApplicationContext(), "Сортировка по заголовку");
+            toast = Toast.makeText(getApplicationContext(), "Cортировка по названию", Toast.LENGTH_SHORT);
+            sort.setBackgroundResource(R.drawable.ic_date_range);
+            toast.show();
         }
         else {
             comparator = dateComparator;
-            InstantToast.showText(getApplicationContext(), "Сортировка по дате");
+            toast = Toast.makeText(getApplicationContext(), "Сортировка по дате", Toast.LENGTH_SHORT);
+            sort.setBackgroundResource(R.drawable.ic_sort_by_alpha);
+            toast.show();
         }
         setSorted();
     }
 
     private void setSorted(){
-        Collections.sort(filteredNotes, comparator);
+        Collections.sort(sortedNotes, comparator);
         adapter.notifyDataSetChanged();
 
     }
@@ -164,7 +165,11 @@ public class MainActivity extends AppCompatActivity {
     Comparator<Note> comparator = dateComparator;
 
     public void onClear(View view) {
+        searchBar.clearFocus();
         searchBar.setText("");
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+
         search();
     }
 }

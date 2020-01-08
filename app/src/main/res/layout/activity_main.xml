@@ -5,58 +5,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="0dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/cardview_dark_background"
     tools:context=".MainActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <FrameLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search"
-                android:inputType="text"
-                android:layout_margin="10dp"
-                android:imeOptions="actionSearch"
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:layout_weight="1">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search"
+                    android:inputType="text"
+                    android:layout_margin="10dp"
+                    android:imeOptions="actionSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Поиск"
+                    android:background="@drawable/border" />
+
+                <ImageButton
+                    android:id="@+id/clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="end"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_clear"
+                    android:onClick="onClear"
+                    />
+            </FrameLayout>
+            <ImageButton
+                android:id="@+id/sort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Поиск"
-                android:background="@drawable/border" />
-
+                android:onClick="sortClick"
+                android:layout_weight="4"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="2dp"
+                android:maxHeight="24dp"
+                android:maxWidth="24dp"
+                android:background="@drawable/oval_button"/>
             <ImageButton
-                android:id="@+id/clear"
-                android:layout_width="wrap_content"
+                android:id="@+id/add"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:layout_gravity="end"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_clear"
-                android:onClick="onClear"
-                />
-        </FrameLayout>
-        <include
-            layout="@layout/note_view"
-            android:id="@+id/notes"/>
-    </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/sort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="100dp"
-        app:srcCompat="@drawable/ic_sort"
-        android:onClick="sortClick" />
+                android:layout_weight="4"
+                android:onClick="addClick"
+                android:src="@drawable/ic_add"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="2dp"
+                android:maxHeight="24dp"
+                android:maxWidth="24dp"
+                android:background="@drawable/oval_button"/>
+        </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        app:srcCompat="@drawable/ic_add"
-        android:onClick="addClick"/>
+        <include
+            android:id="@+id/notes"
+            layout="@layout/note_view"/>
+
+    </LinearLayout>
 
 </FrameLayout>

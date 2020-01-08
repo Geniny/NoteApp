@@ -1,4 +1,4 @@
-package com.artisanter.noteapp;
+package com.geniny.noteapp;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;

@@ -1,4 +1,4 @@
-package com.artisanter.noteapp;
+package com.geniny.noteapp;
 
 import androidx.room.TypeConverter;
 import java.util.Date;
